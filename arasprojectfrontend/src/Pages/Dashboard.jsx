@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import Navbar from '../Components/Navbar';
 import Report from '../Components/Report';
 
-
 const Dashboard = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [partNumber, setPartNumber] = useState('');
@@ -40,10 +39,6 @@ const Dashboard = () => {
           </div>
         </div>
       )}
-
-     
-
-
       <Report />
 
     </div>

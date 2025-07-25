@@ -16,7 +16,7 @@ const DummyWorkflow = ({ reportData }) => {
     // Recharts Pie chart typically expects the actual count for 'value'
     const chartData = Object.entries(stateCounts).map(([state, count]) => ({
         name: state,
-        value: count, 
+        value: count, // Pass the raw count, not percentage
     }));
     
     const COLORS = ['#FACC15', '#F59E0B', '#10B981', '#3B82F6', '#6366F1', '#E11D48'];
@@ -34,7 +34,7 @@ const DummyWorkflow = ({ reportData }) => {
                 labelLine={false}
                 label={({ name, percent }) => `${name} (${(percent * 100).toFixed(0)}%)`}
                 outerRadius={100}
-                dataKey="value" // Data key for the value (count)
+                dataKey="value" 
               >
                 {chartData.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />

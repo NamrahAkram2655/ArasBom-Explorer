@@ -1,55 +1,71 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Lock, Mail, Eye, EyeOff, Sparkles } from 'lucide-react';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Lock, Mail, Eye, EyeOff, Sparkles } from "lucide-react";
 
 export const Login = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
-    username: '', // Changed 'name' to 'username' to match backend
-    password: ''
+    username: "",
+    password: "",
   });
-  const [error, setError] = useState('');
-  const [message, setMessage] = useState('');
+  const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
 
   const handleInputChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
-    setMessage('');
+    setError("");
+    setMessage("");
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        
-        body: JSON.stringify(formData)
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/api/login`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+
+          body: JSON.stringify(formData),
+        }
+      );
 
       const data = await response.json();
 
       if (response.ok) {
-        setMessage(data.message || 'Login successful!');
-        
-      sessionStorage.setItem('sessionId', data.sessionId); // OR localStorage.setItem()
-      sessionStorage.setItem('userName', data.name);
-      sessionStorage.setItem('userId', data.userId);
+        setMessage(data.message || "Login successful!");
 
-        navigate('/dashboard');
+        // sessionStorage.setItem('sessionId', data.sessionId); // OR localStorage.setItem()
+        // sessionStorage.setItem('userName', data.name);
+        // sessionStorage.setItem('userId', data.userId);
+
+        sessionStorage.setItem(
+          "user",
+          JSON.stringify({
+            name: data.name,
+            userId: data.userId,
+            sessionId: data.sessionId,
+          })
+        );
+
+        navigate("/dashboard");
       } else {
-        setError(data.message || 'Login failed. Please check your credentials.');
+        setError(
+          data.message || "Login failed. Please check your credentials."
+        );
       }
     } catch (err) {
-      // console.error('Login error:', err);
-      setError('Could not connect to the server. Please ensure the backend is running and accessible.');
+      console.error("Login error:", err);
+      setError(
+        "Could not connect to the server. Please ensure the backend is running and accessible."
+      );
     }
   };
 
@@ -58,12 +74,24 @@ export const Login = () => {
       <div className="bg-white rounded-3xl shadow-2xl overflow-hidden max-w-4xl w-full flex flex-col md:flex-row min-h-[600px]">
         <div className="flex-1 bg-gradient-to-br from-yellow-400 via-orange-400 to-yellow-500 relative flex items-center justify-center overflow-hidden p-6 md:p-0">
           <div className="absolute inset-0">
-            <div className="absolute top-12 left-12 text-white/30 text-2xl"><Sparkles /></div>
-            <div className="absolute top-20 right-16 text-white/30 text-xl"><Sparkles /></div>
-            <div className="absolute bottom-24 left-20 text-white/30 text-lg"><Sparkles /></div>
-            <div className="absolute bottom-16 right-12 text-white/30 text-2xl"><Sparkles /></div>
-            <div className="absolute top-1/3 right-8 text-white/30 text-sm"><Sparkles /></div>
-            <div className="absolute bottom-1/3 left-8 text-white/30 text-sm"><Sparkles /></div>
+            <div className="absolute top-12 left-12 text-white/30 text-2xl">
+              <Sparkles />
+            </div>
+            <div className="absolute top-20 right-16 text-white/30 text-xl">
+              <Sparkles />
+            </div>
+            <div className="absolute bottom-24 left-20 text-white/30 text-lg">
+              <Sparkles />
+            </div>
+            <div className="absolute bottom-16 right-12 text-white/30 text-2xl">
+              <Sparkles />
+            </div>
+            <div className="absolute top-1/3 right-8 text-white/30 text-sm">
+              <Sparkles />
+            </div>
+            <div className="absolute bottom-1/3 left-8 text-white/30 text-sm">
+              <Sparkles />
+            </div>
           </div>
 
           <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-white/5"></div>
@@ -71,7 +99,11 @@ export const Login = () => {
           <div className="relative z-10 flex flex-col items-center text-center">
             <div className="bg-white/20 backdrop-blur-sm rounded-full p-8 mb-4">
               <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center">
-                <svg className="w-16 h-16 text-yellow-500" fill="currentColor" viewBox="0 0 24 24">
+                <svg
+                  className="w-16 h-16 text-yellow-500"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
                   <path d="M12 2L2 12h3v8h14v-8h3L12 2zm0 15c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z" />
                 </svg>
               </div>
@@ -97,7 +129,7 @@ export const Login = () => {
                 <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                 <input
                   type="text"
-                  name="username" 
+                  name="username" // Changed name attribute to 'username'
                   placeholder="Username"
                   value={formData.username}
                   onChange={handleInputChange}
@@ -122,19 +154,28 @@ export const Login = () => {
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
                 >
-                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  {showPassword ? (
+                    <EyeOff className="w-5 h-5" />
+                  ) : (
+                    <Eye className="w-5 h-5" />
+                  )}
                 </button>
               </div>
 
               {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
-              {message && <p className="text-green-600 text-sm mt-2">{message}</p>}
+              {message && (
+                <p className="text-green-600 text-sm mt-2">{message}</p>
+              )}
 
               <div className="flex justify-between items-center">
                 <label className="flex items-center">
                   <input type="checkbox" className="mr-2 accent-yellow-500" />
                   <span className="text-sm text-gray-600">Remember me</span>
                 </label>
-                <a href="#" className="text-sm text-yellow-600 hover:text-yellow-700 transition-colors">
+                <a
+                  href="#"
+                  className="text-sm text-yellow-600 hover:text-yellow-700 transition-colors"
+                >
                   Forgot Password?
                 </a>
               </div>
